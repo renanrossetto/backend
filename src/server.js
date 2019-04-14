@@ -1,39 +1,39 @@
-const express = require("express");
-const mongoose = require ("mongoose");
-const path = require ("path");
-const cors = require ("cors");
+const express = require('express');
+const mongoose = require('mongoose');
+const path = require('path');
+const http = require('http');
+const socket = require('socket.io');
+const cors = require('cors');
 
 const app = express();
 
 app.use(cors());
 
-const server = require("http").Server(app);
-const io = require("socket.io")(server);
+const server = http.Server(app);
+const io = socket(server);
 
-io.on("connection", socket =>{
-  socket.on("connectRoom", box => {
-      socket.join(box);
-  })
+io.on('connection', socket => {
+    socket.on('connectionRoom', box => {
+        socket.join(box);
+    });
+    console.log('OK');
 });
 
-
-mongoose.connect ('mongodb+srv://renan:renan@cluster0-cp5ll.mongodb.net/test?retryWrites=true', {
-
-useNewUrlParser: true
+mongoose.connect('mongodb+srv://netobox:netobox@cluster0-ur6ze.mongodb.net/netobox?retryWrites=true', {
+    useNewUrlParser: true
 });
 
-app.use((req,res, next)=>{
- req.io = io;
+app.use((req, res, next) => {
+    req.io = io;
 
- return next();
+    return next();
 });
 
-app.use (express.json()); //recebe os dados json 
-app.use (express.urlencoded({extended: true})); //envia arquivos nas requisições
-app.use("/files", express.static(path.resolve(__dirname, "..","tmp")));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use('/files', express.static(path.resolve(__dirname, '..', 'tmp')));
 
+app.use(require('./routes'));
 
-app.use (require('./routes')); //importando as rotas
-
-server.listen(3333);
+server.listen(process.env.PORT || 8000);
 
