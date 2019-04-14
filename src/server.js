@@ -19,7 +19,7 @@ io.on('connection', socket => {
     console.log('OK');
 });
 
-mongoose.connect('mongodb+srv://netobox:netobox@cluster0-ur6ze.mongodb.net/netobox?retryWrites=true', {
+mongoose.connect('mongodb+srv://renan:renan@cluster0-ur6ze.mongodb.net/netobox?retryWrites=true', {
     useNewUrlParser: true
 });
 
